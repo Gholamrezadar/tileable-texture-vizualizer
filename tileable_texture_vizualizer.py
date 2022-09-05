@@ -26,15 +26,26 @@ def make_tile(img, roi_rect, tile_multiple=(4, 4)):
 if __name__ == '__main__':
     # Have to be defined globaly for the mouse callback
     roi_rect = None
-    MOVE_SPEED = 10
-    SCALE_SPEED = 4
+    MOVE_SPEED = 1
+    SCALE_SPEED = 1
     img = None
+    is_pressed = False
 
     def on_mouse(event, x, y, wheel, params):
-        global roi_rect, SCALE_SPEED, img
+        global roi_rect, MOVE_SPEED, SCALE_SPEED, img, is_pressed
+        
+
+        # Mouse down
+        if event == cv2.EVENT_LBUTTONDOWN:
+            is_pressed = True
+
+        # Mouse up
+        if event == cv2.EVENT_LBUTTONUP:
+            is_pressed = False
 
         # Move ROI using mouse
-        if event == cv2.EVENT_MOUSEMOVE and\
+        if is_pressed and\
+            event == cv2.EVENT_MOUSEMOVE and\
             y-roi_rect[2]//2-MOVE_SPEED > 0 and\
             y+roi_rect[2]//2+MOVE_SPEED < img.shape[0] and\
             x-roi_rect[3]//2-MOVE_SPEED > 0 and\
@@ -44,7 +55,7 @@ if __name__ == '__main__':
             roi_rect[1] = x
 
         # Scale ROI using mouse wheel
-        elif event == cv2.EVENT_MOUSEWHEEL:
+        if event == cv2.EVENT_MOUSEWHEEL:
             if wheel > 0 and roi_rect[2] < img.shape[0]//2 and roi_rect[3] < img.shape[1]//2:
                 roi_rect[2] += SCALE_SPEED
                 roi_rect[3] += SCALE_SPEED
@@ -134,8 +145,10 @@ if __name__ == '__main__':
         # Enter: Save tileable_img
         elif key == 13:
             if tileable_img is not None:
+                print("saved")
                 cv2.imwrite(
-                    f"{file_name[:file_name.find('.')]}_tileable.{file_name[file_name.find('.'):]}")
+                    f"{file_name[:file_name.find('.')]}_tileable.{file_name[file_name.find('.'):]}",
+                    tileable_img)
 
         # ESC: close
         elif key == 27:
