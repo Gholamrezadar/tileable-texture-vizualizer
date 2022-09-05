@@ -1,9 +1,12 @@
 # Tileable Texture Visualizer and Extractor
 
 A GUI app made using python and opencv to find the tileable part in Images/Textures.
+Copy
 
+### Successful Tiling
 ![Screenshot Success](screenshot1.png)
 
+### Unsuccessful Tiling
 ![Screenshot Failed](screenshot2.png)
 
 ## Requirements
